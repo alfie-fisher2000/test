@@ -27,15 +27,19 @@ body{
 h1,h2,h3,.disp{font-family:'Barlow Condensed','Barlow',-apple-system,sans-serif;text-transform:uppercase;letter-spacing:.04em}
 header{
   padding:calc(14px + env(safe-area-inset-top)) 18px 12px;
-  display:flex;justify-content:space-between;align-items:baseline;
+  display:flex;justify-content:space-between;align-items:center;
   border-bottom:1px solid var(--line);
   position:sticky;top:0;background:rgba(15,17,19,.94);backdrop-filter:blur(8px);z-index:20;
 }
 header h1{font-size:1.35rem;font-weight:700}
 header h1 span{color:var(--brass)}
-#hdrMeta{font-size:.8rem;color:var(--faint);font-weight:500}
+#btnEdit{
+  background:var(--surface);border:1px solid var(--line);color:var(--dim);
+  font-family:'Barlow Condensed';font-weight:600;font-size:.8rem;letter-spacing:.08em;
+  text-transform:uppercase;padding:7px 12px;border-radius:9px;
+}
+#btnEdit.on{background:var(--brass);border-color:var(--brass);color:#14100A}
 main{padding:14px 14px 20px;max-width:560px;margin:0 auto}
-/* week strip */
 .weekstrip{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none}
 .weekstrip::-webkit-scrollbar{display:none}
 .wkbtn{
@@ -46,7 +50,6 @@ main{padding:14px 14px 20px;max-width:560px;margin:0 auto}
 .wkbtn small{display:block;font-size:.62rem;letter-spacing:.08em;color:var(--faint);font-weight:500}
 .wkbtn.active{background:var(--brass);border-color:var(--brass);color:#14100A}
 .wkbtn.active small{color:#4A3A16}
-/* day tabs */
 .daytabs{display:flex;gap:6px;margin-bottom:12px}
 .daybtn{
   flex:1;padding:9px 2px;border-radius:10px;background:var(--surface);
@@ -56,19 +59,17 @@ main{padding:14px 14px 20px;max-width:560px;margin:0 auto}
 .daybtn small{display:block;font-size:.6rem;letter-spacing:.1em;color:var(--faint)}
 .daybtn.active{border-color:var(--brass);color:var(--brass)}
 .daybtn.done::after{content:"✓";color:var(--green);font-size:.7rem;display:block;line-height:.9}
-/* week note */
 .note{
   background:var(--surface);border-left:3px solid var(--brass);border-radius:0 10px 10px 0;
   padding:10px 12px;font-size:.85rem;color:var(--dim);margin-bottom:14px;line-height:1.4;
 }
 .note.deload{border-left-color:var(--green)}
-/* exercise card */
 .ex{
   background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
   margin-bottom:12px;overflow:hidden;
 }
 .ex.top{border-color:var(--brass-dim)}
-.exhead{padding:12px 14px 8px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.exhead{padding:12px 14px 6px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .exname{font-size:1.05rem;font-weight:600;line-height:1.15}
 .exmeta{font-size:.75rem;color:var(--faint);margin-top:2px}
 .badge{
@@ -77,21 +78,49 @@ main{padding:14px 14px 20px;max-width:560px;margin:0 auto}
 }
 .badge.top{background:var(--brass);color:#14100A}
 .badge.legs{background:transparent;border:1px solid var(--brass-dim);color:var(--brass)}
-.sets{padding:4px 14px 12px;display:grid;gap:6px}
-.setrow{display:grid;grid-template-columns:34px 1fr 1fr 58px;gap:8px;align-items:center}
+.suggest{
+  margin:0 14px 8px;padding:8px 10px;border-radius:9px;background:var(--surface2);
+  font-size:.8rem;color:var(--dim);border:1px dashed var(--brass-dim);
+}
+.suggest b{color:var(--brass);font-weight:600}
+.sets{padding:2px 14px 12px;display:grid;gap:6px}
+.setrow{display:grid;grid-template-columns:34px 1fr 1fr 52px 46px;gap:7px;align-items:center}
+.setrow.notop{grid-template-columns:34px 1fr 1fr 52px}
 .setlabel{font-family:'Barlow Condensed';font-weight:600;color:var(--faint);font-size:.85rem;text-align:center}
 .setlabel.ts{color:var(--brass)}
 .setrow input{
   width:100%;background:var(--surface2);border:1px solid var(--line);border-radius:9px;
-  color:var(--text);font:600 1.05rem 'Barlow';padding:10px 8px;text-align:center;
+  color:var(--text);font:600 1rem 'Barlow';padding:10px 6px;text-align:center;
   -moz-appearance:textfield;
 }
 .setrow input::-webkit-outer-spin-button,.setrow input::-webkit-inner-spin-button{-webkit-appearance:none}
 .setrow input:focus{outline:none;border-color:var(--brass)}
-.setrow input::placeholder{color:var(--faint);font-weight:400;font-size:.85rem}
-.e1rm{font-family:'Barlow Condensed';font-weight:600;font-size:.9rem;color:var(--dim);text-align:right}
-.exbest{padding:0 14px 10px;font-size:.72rem;color:var(--faint)}
-.exbest b{color:var(--brass);font-weight:600}
+.setrow input::placeholder{color:var(--faint);font-weight:400;font-size:.82rem}
+.setrow input.rpe{border-style:dashed;font-size:.9rem}
+.e1rm{font-family:'Barlow Condensed';font-weight:600;font-size:.85rem;color:var(--dim);text-align:right}
+/* edit mode */
+.editbar{padding:8px 14px 12px;display:flex;flex-wrap:wrap;gap:8px;border-top:1px dashed var(--line)}
+.ebtn{
+  background:var(--surface2);border:1px solid var(--line);color:var(--dim);
+  padding:7px 11px;border-radius:8px;font:600 .78rem 'Barlow Condensed';
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.ebtn.danger{color:var(--red)}
+.ebtn.gold{color:var(--brass)}
+.editfields{padding:8px 14px 4px;display:grid;gap:8px}
+.efrow{display:grid;grid-template-columns:80px 1fr;gap:8px;align-items:center}
+.efrow label{font-size:.72rem;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+.efrow input[type=text]{
+  background:var(--surface2);border:1px solid var(--line);border-radius:8px;
+  color:var(--text);font:500 .95rem 'Barlow';padding:9px 10px;width:100%;
+}
+.efrow .mini{display:flex;gap:6px;align-items:center}
+.efrow .mini input{width:64px;text-align:center;background:var(--surface2);border:1px solid var(--line);border-radius:8px;color:var(--text);font:600 .95rem 'Barlow';padding:9px 4px}
+.efrow .mini span{color:var(--faint);font-size:.85rem}
+.togglerow{display:flex;gap:14px;padding:2px 0}
+.togglerow label{font-size:.82rem;color:var(--dim);display:flex;gap:6px;align-items:center}
+.dayeditbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.addex{width:100%;padding:13px;border-radius:12px;border:1px dashed var(--brass-dim);background:none;color:var(--brass);font:600 .9rem 'Barlow Condensed';letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
 /* progress */
 .plift{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:12px}
 .plift h3{font-size:1rem;color:var(--text);margin-bottom:2px}
@@ -130,7 +159,6 @@ main{padding:14px 14px 20px;max-width:560px;margin:0 auto}
 }
 .bigbtn.warn{color:var(--red);border-color:#4A2C28}
 .datanote{font-size:.78rem;color:var(--faint);line-height:1.5;margin-top:14px}
-/* nav */
 nav{
   position:fixed;bottom:0;left:0;right:0;display:flex;
   background:rgba(15,17,19,.96);backdrop-filter:blur(10px);
@@ -149,30 +177,49 @@ nav button .ico{display:block;font-size:1.1rem;margin-bottom:1px}
   padding:9px 16px;border-radius:10px;font-size:.85rem;z-index:50;opacity:0;transition:opacity .25s;pointer-events:none;
 }
 .toast.show{opacity:1}
+/* bottom sheet picker */
+.sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:60;display:none}
+.sheetbg.open{display:block}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:61;transform:translateY(105%);
+  transition:transform .22s ease;background:var(--surface);border-top:1px solid var(--line);
+  border-radius:18px 18px 0 0;max-height:72vh;display:flex;flex-direction:column;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.sheet.open{transform:translateY(0)}
+.sheet h3{padding:16px 18px 8px;font-size:1.05rem;color:var(--brass)}
+.sheet .sub{padding:0 18px 10px;font-size:.78rem;color:var(--faint)}
+.sheetlist{overflow-y:auto;padding:0 12px 14px}
+.sheetitem{
+  width:100%;text-align:left;padding:13px 12px;border-radius:10px;background:none;
+  border:none;color:var(--text);font:500 .95rem 'Barlow';border-bottom:1px solid var(--line);
+}
+.sheetitem:last-child{border-bottom:none}
+.sheetitem.cur{color:var(--brass)}
+.sheetitem.cur::after{content:"  · current";font-size:.7rem;color:var(--faint)}
+.sheetitem.custom{color:var(--dim);font-style:italic}
+.sheetitem small{display:block;color:var(--faint);font-size:.72rem;font-style:normal}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <header>
   <h1>Block <span>One</span></h1>
-  <div id="hdrMeta">Legs 3x · CBum style</div>
+  <button id="btnEdit">Edit plan</button>
 </header>
 
 <main>
-  <!-- LOG VIEW -->
   <section id="view-log">
     <div class="weekstrip" id="weekstrip"></div>
     <div class="daytabs" id="daytabs"></div>
+    <div class="dayeditbar hidden" id="dayeditbar"></div>
     <div class="note" id="weeknote"></div>
     <div id="exlist"></div>
+    <button class="addex hidden" id="btnAddEx">+ Add exercise to this day</button>
   </section>
 
-  <!-- PROGRESS VIEW -->
-  <section id="view-progress" class="hidden">
-    <div id="proglist"></div>
-  </section>
+  <section id="view-progress" class="hidden"><div id="proglist"></div></section>
 
-  <!-- WEIGH-IN VIEW -->
   <section id="view-weight" class="hidden">
     <div class="wtargets">
       <div class="wt"><div class="v">3200</div><div class="l">kcal / day</div></div>
@@ -183,18 +230,19 @@ nav button .ico{display:block;font-size:1.1rem;margin-bottom:1px}
     <div id="weighlist"></div>
   </section>
 
-  <!-- DATA VIEW -->
   <section id="view-data" class="hidden">
     <div class="databtns">
       <button class="bigbtn" id="btnExport">Export backup (JSON)</button>
       <button class="bigbtn" id="btnImport">Import backup</button>
       <input type="file" id="fileImport" accept=".json" class="hidden">
+      <button class="bigbtn" id="btnResetPlan">Restore default plan (keeps logs)</button>
       <button class="bigbtn warn" id="btnReset">Erase all logged data</button>
     </div>
     <p class="datanote">
-      Data lives on this device. Export a backup occasionally (it downloads a small JSON file) —
-      restoring it on a new phone or after a browser clear-out takes one tap on Import.
-      The plan itself is baked into the app and never lost.
+      Data lives on this device. Export a backup weekly — it downloads a small JSON containing
+      your plan (including any edits), every logged set, and all weigh-ins. Import restores it anywhere.
+      Weight suggestions follow the block rules: top sets add 2.5kg (upper) / 5kg (lower) when last RPE ≤ 8,
+      deload week auto-suggests 65%; accessories use double progression (top of rep range on all sets → add weight).
     </p>
   </section>
 </main>
@@ -207,68 +255,100 @@ nav button .ico{display:block;font-size:1.1rem;margin-bottom:1px}
 </nav>
 
 <div class="toast" id="toast"></div>
+<div class="sheetbg" id="sheetbg"></div>
+<div class="sheet" id="sheet">
+  <h3 id="sheetTitle"></h3>
+  <div class="sub" id="sheetSub"></div>
+  <div class="sheetlist" id="sheetList"></div>
+</div>
 
 <script>
 "use strict";
-/* ---------------- PLAN (baked in) ---------------- */
-const PLAN = {
-  days: [
-    { key:"MON", name:"Chest · Bench Strength", ex:[
-      ["Flat Barbell Bench Press","Top 5 + 3×5",4,"top",false],
-      ["High-Incline Smith Press","3 × 8–10",3,null,false],
-      ["Pec Deck (deep stretch, 2s ecc.)","3 × 12–15",3,null,false],
-      ["Lateral Raise (rest-pause last set)","3 × 12–15",3,null,false],
-      ["EZ Skullcrusher (2s ecc.)","3 × 10–12",3,null,false],
-      ["Rope Tricep Pushdown","3 × 12–15",3,null,false],
-    ]},
-    { key:"WED", name:"Legs · Quad Strength", ex:[
-      ["Back Squat","Top 5 + 3×5",4,"top",true],
-      ["Heel-Elevated DB / Goblet Squat (slow ecc.)","4 × 8–12",4,null,true],
-      ["Leg Press (feet low, 3s ecc.)","3 × 10–12",3,null,true],
-      ["Leg Extension (dropset last set)","3 × 12–15",3,null,true],
-      ["Standing Calf Raise","4 × 10–12",4,null,false],
-    ]},
-    { key:"THU", name:"Chest Volume · Leg Pump · Arms · Abs", ex:[
-      ["Incline DB Press","4 × 8–12",4,null,false],
-      ["Leg Press (pump, controlled)","3 × 10–12",3,null,true],
-      ["Seated Leg Curl","3 × 12–15",3,null,true],
-      ["Preacher / Machine Curl (dropset last set)","3 × 12–15",3,null,false],
-      ["Hammer Curl","3 × 10–12",3,null,false],
-      ["Overhead Cable Extension","3 × 12–15",3,null,false],
-      ["Hanging Leg Raise / Cable Crunch","3 × 10–15",3,null,false],
-    ]},
-    { key:"SAT", name:"Legs · RDL + Posterior", ex:[
-      ["Romanian Deadlift","Top 5 + 2×5",3,"top",true],
-      ["Hip Thrust","4 × 8–10",4,null,true],
-      ["Lying Leg Curl (rest-pause last set)","3 × 10–12",3,null,true],
-      ["Back Extension (glute focus)","3 × 12–15",3,null,true],
-      ["Seated Calf Raise","4 × 12–15",4,null,false],
-    ]},
-    { key:"SUN", name:"Back · Shoulders · Arms", ex:[
-      ["Weighted Pull-Up / Lat Pulldown","4 × 6–10",4,null,false],
-      ["Chest-Supported Row","4 × 8–10",4,null,false],
-      ["Seated DB Shoulder Press","3 × 8–10",3,null,false],
-      ["Cable Lateral Raise","3 × 15–20",3,null,false],
-      ["Face Pull (rear delts)","3 × 15–20",3,null,false],
-      ["EZ Bar Curl","3 × 10–12",3,null,false],
-      ["Incline DB Curl (full stretch)","3 × 10–12",3,null,false],
-    ]},
-  ],
-  notes: {
-    1:"Strength block 1. Squat / Bench / RDL: one top set of 5 @ RPE 7, back-offs at −10%. Slow eccentrics on machines; no dropsets or rest-pause yet.",
-    2:"Top set of 5 @ RPE 8. Last week's top set RPE ≤ 7? Add 2.5kg (bench) / 5kg (squat, RDL). Intensity techniques switch ON.",
-    3:"Top set of 5 @ RPE 8–9. Keep adding when the top set allows. Push accessory double progression.",
-    4:"Heaviest 5s of the block — top sets near a true 5RM @ RPE 9. Don't grind back-offs to failure.",
-    5:"DELOAD — 60–70% of Wk 4 top-set weight, sets of 5, RPE 6 max. No intensity techniques. Recovery is the training.",
-    6:"Strength block 2. Main lifts: top set of 3 @ RPE 8 + back-offs 3×4 at −10%. Heavier than your Wk 4 fives.",
-    7:"Top set of 3 @ RPE 9. Back-offs heavier too. Accessories: beat the Wk 3–4 logbook.",
-    8:"TEST WEEK — heavy single or 3RM @ RPE 9–9.5 on Squat, Bench, RDL. Accessories light. Log the maxes.",
-  },
-  mains: ["Back Squat","Romanian Deadlift","Flat Barbell Bench Press","Hip Thrust","Weighted Pull-Up / Lat Pulldown","Incline DB Press"],
+/* ------------ default plan (seed only — user-editable after) ------------ */
+function ex(id,name,sets,repMin,repMax,opts={}){
+  return Object.assign({id,name,sets,repMin,repMax,top:false,legs:false,inc:2.5,track:false,slot:"other"},opts);
+}
+/* Exercise bank: like-for-like variations per movement family.
+   Curated with a lengthened-position bias (2025-26 meta-analyses: loading the
+   muscle at long length grows it best). ★ = strong stretch-position pick. */
+const BANK = {
+  "flat-press":{label:"Flat chest press",list:["Flat Barbell Bench Press","Flat DB Press (deep stretch) ★","Machine Chest Press","Smith Flat Press","Weighted Dips (chest lean) ★","Cambered Bar Bench ★","Paused Bench Press","Floor Press","Push-Up (weighted, deficit) ★"]},
+  "incline-press":{label:"Incline chest press",list:["High-Incline Smith Press","Incline Barbell Press","Incline DB Press (deep stretch) ★","Low-Incline DB Press ★","Incline Machine Press","Reverse-Grip Bench Press","Incline Push-Up (weighted)"]},
+  "chest-fly":{label:"Chest fly",list:["Pec Deck (deep stretch, 2s ecc.) ★","Cable Fly (low-to-high)","Cable Fly (high-to-low)","Seated Cable Fly ★","Flat DB Fly ★","Incline DB Fly ★","Single-Arm Cable Fly","Machine Fly (lengthened partials last set)"]},
+  "side-delt":{label:"Side delts",list:["Lateral Raise (rest-pause last set)","Cable Lateral Raise (behind back) ★","Cable Lateral Raise","Machine Lateral Raise","Lean-Away DB Lateral ★","Seated DB Lateral","Cross-Body Cable Lateral ★","Lu Raise","Upright Row (wide grip)"]},
+  "triceps":{label:"Triceps",list:["Overhead Cable Extension ★","EZ Skullcrusher (2s ecc.) ★","Overhead DB Extension ★","Behind-Head Cable Extension ★","Rope Tricep Pushdown","Bar Pushdown","JM Press","Cross-Body Cable Extension","Katana Extension ★","Close-Grip Bench Press","Dips (upright)"]},
+  "squat":{label:"Squat (barbell)",list:["Back Squat","Back Squat (deep, high-bar) ★","Front Squat ★","Safety Bar Squat","Box Squat","Smith Squat (feet forward)","Paused Squat ★","Tempo Squat (3s down)"]},
+  "quad-2nd":{label:"Quad builder",list:["Heel-Elevated DB / Goblet Squat (slow ecc.) ★","Hack Squat (deep) ★","Pendulum Squat ★","V-Squat Machine","Bulgarian Split Squat ★","Walking Lunge","Reverse Lunge (deficit) ★","Smith Squat (feet forward, heels up)","Front Foot Elevated Split Squat ★","Belt Squat","Leg Press (deep, close stance) ★","Cyclist Squat ★"]},
+  "quad-press":{label:"Leg press family",list:["Leg Press (feet low, 3s ecc.) ★","Leg Press (pump, controlled)","Leg Press (deep, lengthened partials) ★","Hack Squat (light)","Belt Squat","Single-Leg Leg Press","Horizontal Leg Press"]},
+  "quad-iso":{label:"Quad isolation",list:["Leg Extension (dropset last set)","Leg Extension (seat back reclined) ★","Sissy Squat ★","Reverse Nordic ★","Single-Leg Extension","Spanish Squat"]},
+  "calf":{label:"Calves",list:["Standing Calf Raise (straight knee) ★","Leg Press Calf Press ★","Smith Calf Raise ★","Single-Leg DB Calf Raise ★","Seated Calf Raise","Calf Raise (deficit, pause at stretch) ★","Donkey Calf Raise ★"]},
+  "hinge":{label:"Hip hinge",list:["Romanian Deadlift ★","Stiff-Leg Deadlift ★","DB Romanian Deadlift ★","Snatch-Grip RDL ★","Deficit RDL ★","Good Morning ★","Seated Good Morning","Single-Leg RDL","Hip-Hinge 45° Back Extension (loaded)","Cable Pull-Through"]},
+  "glute":{label:"Glutes",list:["Hip Thrust","Machine Hip Thrust","Barbell Glute Bridge","KAS Glute Bridge","B-Stance Hip Thrust","Single-Leg Hip Thrust","Cable Pull-Through","Deep Step-Up ★","Walking Lunge (long stride) ★","Smith Machine Hip Thrust"]},
+  "ham-curl":{label:"Hamstring curl",list:["Seated Leg Curl ★","Lying Leg Curl (rest-pause last set)","Seated Leg Curl (lean forward) ★","Standing Single-Leg Curl","Nordic Curl (assisted) ★","Swiss-Ball / Slider Curl","Razor Curl ★","Single-Leg Seated Curl ★"]},
+  "back-ext":{label:"Glute/ham extension",list:["Back Extension (glute focus)","45° Hyper (ham focus) ★","Reverse Hyper","GHD Back Extension","Back Extension (rounded upper, glute bias)"]},
+  "vert-pull":{label:"Vertical pull",list:["Weighted Pull-Up / Lat Pulldown","Lat Pulldown (full stretch at top) ★","Chin-Up","Neutral-Grip Pulldown ★","Single-Arm Pulldown (cross-body) ★","Wide-Grip Lat Pulldown","Kneeling Cable Pulldown","Machine Pullover ★","Straight-Arm Pulldown ★","Behind-Neck Pulldown (light)"]},
+  "row":{label:"Row",list:["Chest-Supported Row","Chest-Supported Row (full protraction) ★","Barbell Row","Pendlay Row","Seated Cable Row ★","T-Bar Row","Single-Arm DB Row ★","Machine Row","Meadows Row","Seal Row","Single-Arm Cable Row (long stretch) ★"]},
+  "sh-press":{label:"Shoulder press",list:["Seated DB Shoulder Press ★","Machine Shoulder Press","Barbell Overhead Press","Smith Shoulder Press","Arnold Press ★","Standing DB Press","Z Press","Landmine Press"]},
+  "rear-delt":{label:"Rear delts",list:["Face Pull (rear delts)","Reverse Pec Deck","Rear-Delt Cable Fly (cross-body) ★","Bent-Over DB Fly","Chest-Supported Rear Fly ★","Rope Face Pull (high)","Cable Rear Delt Row"]},
+  "biceps":{label:"Biceps",list:["Incline DB Curl (full stretch) ★","Bayesian Cable Curl ★","Preacher / Machine Curl (dropset last set) ★","EZ Bar Curl","Barbell Curl","Hammer Curl","Cable Curl","Spider Curl","Face-Away Cable Curl ★","Concentration Curl","Drag Curl","Reverse Curl (brachioradialis)"]},
+  "abs":{label:"Abs",list:["Hanging Leg Raise / Cable Crunch","Cable Crunch (full stretch at top) ★","Hanging Leg Raise","Ab Wheel Rollout ★","Machine Crunch","Decline Sit-Up","Garhammer Raise","Long-Lever Plank","Weighted Decline Crunch ★"]},
+  "other":{label:"Other / custom",list:[]},
+};
+const DEFAULT_PLAN = { days: [
+  { id:"d1", key:"MON", name:"Chest · Bench Strength", ex:[
+    ex("bench","Flat Barbell Bench Press",4,5,5,{top:true,track:true,inc:2.5,slot:"flat-press"}),
+    ex("smith","High-Incline Smith Press",3,8,10,{slot:"incline-press"}),
+    ex("pecdeck","Pec Deck (deep stretch, 2s ecc.)",3,12,15,{slot:"chest-fly"}),
+    ex("latraise","Lateral Raise (rest-pause last set)",3,12,15,{slot:"side-delt"}),
+    ex("skull","EZ Skullcrusher (2s ecc.)",3,10,12,{slot:"triceps"}),
+    ex("pushdown","Rope Tricep Pushdown",3,12,15,{slot:"triceps"}),
+  ]},
+  { id:"d2", key:"WED", name:"Legs · Quad Strength", ex:[
+    ex("squat","Back Squat",4,5,5,{top:true,legs:true,track:true,inc:5,slot:"squat"}),
+    ex("heelsq","Heel-Elevated DB / Goblet Squat (slow ecc.)",4,8,12,{legs:true,slot:"quad-2nd"}),
+    ex("legpress","Leg Press (feet low, 3s ecc.)",3,10,12,{legs:true,slot:"quad-press"}),
+    ex("legext","Leg Extension (dropset last set)",3,12,15,{legs:true,slot:"quad-iso"}),
+    ex("standcalf","Standing Calf Raise",4,10,12,{slot:"calf"}),
+  ]},
+  { id:"d3", key:"THU", name:"Chest Volume · Leg Pump · Arms · Abs", ex:[
+    ex("inclinedb","Incline DB Press",4,8,12,{track:true,slot:"incline-press"}),
+    ex("legpresspump","Leg Press (pump, controlled)",3,10,12,{legs:true,slot:"quad-press"}),
+    ex("seatedcurl","Seated Leg Curl",3,12,15,{legs:true,slot:"ham-curl"}),
+    ex("preacher","Preacher / Machine Curl (dropset last set)",3,12,15,{slot:"biceps"}),
+    ex("hammer","Hammer Curl",3,10,12,{slot:"biceps"}),
+    ex("ohcable","Overhead Cable Extension",3,12,15,{slot:"triceps"}),
+    ex("abs","Hanging Leg Raise / Cable Crunch",3,10,15,{slot:"abs"}),
+  ]},
+  { id:"d4", key:"SAT", name:"Legs · RDL + Posterior", ex:[
+    ex("rdl","Romanian Deadlift",3,5,5,{top:true,legs:true,track:true,inc:5,slot:"hinge"}),
+    ex("hipthrust","Hip Thrust",4,8,10,{legs:true,track:true,inc:5,slot:"glute"}),
+    ex("lyingcurl","Lying Leg Curl (rest-pause last set)",3,10,12,{legs:true,slot:"ham-curl"}),
+    ex("backext","Back Extension (glute focus)",3,12,15,{legs:true,slot:"back-ext"}),
+    ex("seatcalf","Seated Calf Raise",4,12,15,{slot:"calf"}),
+  ]},
+  { id:"d5", key:"SUN", name:"Back · Shoulders · Arms", ex:[
+    ex("pullup","Weighted Pull-Up / Lat Pulldown",4,6,10,{track:true,slot:"vert-pull"}),
+    ex("csrow","Chest-Supported Row",4,8,10,{slot:"row"}),
+    ex("dbpress","Seated DB Shoulder Press",3,8,10,{slot:"sh-press"}),
+    ex("cablelat","Cable Lateral Raise",3,15,20,{slot:"side-delt"}),
+    ex("facepull","Face Pull (rear delts)",3,15,20,{slot:"rear-delt"}),
+    ex("ezcurl","EZ Bar Curl",3,10,12,{slot:"biceps"}),
+    ex("inclinecurl","Incline DB Curl (full stretch)",3,10,12,{slot:"biceps"}),
+  ]},
+]};
+const NOTES = {
+  1:"Strength block 1. Top-set lifts: one top set of 5 @ RPE 7, back-offs at −10%. Log the RPE — the app uses it to suggest next week's weight. No dropsets or rest-pause yet.",
+  2:"Top set of 5 @ RPE 8. Suggestions below each top lift are computed from last week's RPE. Intensity techniques switch ON.",
+  3:"Top set of 5 @ RPE 8–9. Push accessory double progression — the app flags when you've earned a weight jump.",
+  4:"Heaviest 5s of the block — top sets near a true 5RM @ RPE 9. Don't grind back-offs.",
+  5:"DELOAD — suggestions drop to ~65% automatically. Sets of 5, RPE 6 max, no intensity techniques.",
+  6:"Strength block 2. Top-set lifts switch to a top set of 3 @ RPE 8 + back-offs 3×4 at −10%.",
+  7:"Top set of 3 @ RPE 9. Back-offs heavier. Beat the Wk 3–4 logbook on accessories.",
+  8:"TEST WEEK — heavy single or 3RM @ RPE 9–9.5 on the top-set lifts. Accessories light. Log the maxes.",
 };
 const N_WEEKS = 8, N_DIET_WEEKS = 12;
 
-/* ---------------- storage adapter ---------------- */
+/* ------------ storage ------------ */
 const store = {
   hasWS: typeof window.storage !== "undefined",
   async get(k){
@@ -286,244 +366,489 @@ const store = {
   }
 };
 
-/* state: log[week][day][ex] = [{w,r}...]; weights[week] = [7 nums or null] */
-let state = { log:{}, weights:{} };
-let curWeek = 1, curDay = 0, saveTimer = null;
+/* state: log[week][exId] = [{w,r,rpe?}...] ; weights[week]=[7] */
+let state = { ver:2, plan: JSON.parse(JSON.stringify(DEFAULT_PLAN)), log:{}, weights:{} };
+let curWeek = 1, curDay = 0, editMode = false, saveTimer = null;
 
-function scheduleSave(){
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(()=>store.set("pb:block1", state), 500);
-}
+function scheduleSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(()=>store.set("pb:v2", state), 500); }
 function epley(w,r){ return (w>0 && r>0) ? w*(1+r/30) : 0; }
 function fmt(n){ return Math.round(n*10)/10; }
+function round25(n){ return Math.round(n/2.5)*2.5; }
+function uid(){ return "x"+Math.random().toString(36).slice(2,9); }
 
-/* ---------------- log view ---------------- */
-function getSets(wk,d,e,n){
-  state.log[wk] = state.log[wk] || {};
-  state.log[wk][d] = state.log[wk][d] || {};
-  if(!state.log[wk][d][e]) state.log[wk][d][e] = Array.from({length:n},()=>({w:"",r:""}));
-  return state.log[wk][d][e];
+/* ------------ bottom sheet picker ------------ */
+function openSheet(title, sub, items){
+  const bg=document.getElementById("sheetbg"), sh=document.getElementById("sheet");
+  document.getElementById("sheetTitle").textContent=title;
+  document.getElementById("sheetSub").textContent=sub||"";
+  const list=document.getElementById("sheetList"); list.innerHTML="";
+  items.forEach(it=>{
+    const b=document.createElement("button");
+    b.className="sheetitem"+(it.cur?" cur":"")+(it.custom?" custom":"");
+    b.innerHTML=it.label+(it.small?`<small>${it.small}</small>`:"");
+    b.onclick=()=>{ closeSheet(); it.fn(); };
+    list.appendChild(b);
+  });
+  bg.classList.add("open"); sh.classList.add("open");
 }
-function dayHasData(wk,d){
-  const dd = state.log[wk] && state.log[wk][d];
-  if(!dd) return false;
-  return Object.values(dd).some(sets=>sets.some(s=>s.w!=="" && s.r!==""));
+function closeSheet(){
+  document.getElementById("sheetbg").classList.remove("open");
+  document.getElementById("sheet").classList.remove("open");
 }
-function bestPrev(exName, beforeWeek){
-  let best = 0, bw = 0;
-  for(let wk=1; wk<beforeWeek; wk++){
-    PLAN.days.forEach((day,d)=>{
-      day.ex.forEach((ex,e)=>{
-        if(ex[0]!==exName) return;
-        const sets = state.log[wk] && state.log[wk][d] && state.log[wk][d][e];
-        if(!sets) return;
-        sets.forEach(s=>{
-          const v = epley(parseFloat(s.w),parseFloat(s.r));
-          if(v>best){ best=v; bw=wk; }
-        });
-      });
+document.getElementById("sheetbg").onclick=closeSheet;
+function swapSheet(exdef){
+  const fam = BANK[exdef.slot] || BANK.other;
+  if(!fam.list.length){
+    /* Unknown family — pick one first, then show its variations */
+    const items = Object.keys(BANK).filter(k=>k!=="other").map(k=>({
+      label:BANK[k].label, small:BANK[k].list.slice(0,3).join(" · ")+"…",
+      fn:()=>{ exdef.slot=k; scheduleSave(); swapSheet(exdef); }
+    }));
+    openSheet("Which family is "+exdef.name+"?", "Pick its movement family — then you'll get the swap options.", items);
+    return;
+  }
+  const items = fam.list.map(name=>({
+    label:name, cur:name.replace(" ★","")===exdef.name,
+    fn:()=>{ const clean=name.replace(" ★","");
+      if(clean===exdef.name) return;
+      exdef.name=clean; exdef.id=uid();
+      scheduleSave(); renderLog(); toast("Swapped — fresh history starts");
+    }
+  }));
+  items.push({label:"Custom…", custom:true, fn:()=>{
+    const nm=prompt("Exercise name:", exdef.name); if(nm===null||!nm.trim())return;
+    exdef.name=nm.trim(); exdef.id=uid(); scheduleSave(); renderLog(); toast("Swapped — fresh history starts");
+  }});
+  openSheet("Swap: "+fam.label, "Same job, different tool. ★ = loads the muscle at long length — the current best evidence for growth.", items);
+}
+function addExSheet(){
+  const items = Object.keys(BANK).filter(k=>k!=="other").map(k=>({
+    label:BANK[k].label, small:BANK[k].list.slice(0,3).join(" · ")+"…",
+    fn:()=>{
+      const sub = BANK[k].list.map(name=>({label:name, fn:()=>{
+        state.plan.days[curDay].ex.push(ex(uid(), name.replace(" ★",""), 3, 8, 12, {slot:k}));
+        scheduleSave(); renderLog();
+      }}));
+      sub.push({label:"Custom…", custom:true, fn:()=>{
+        const nm=prompt("Exercise name:"); if(!nm||!nm.trim())return;
+        state.plan.days[curDay].ex.push(ex(uid(), nm.trim(), 3, 8, 12, {slot:k}));
+        scheduleSave(); renderLog();
+      }});
+      openSheet(BANK[k].label, "Pick a variation — defaults to 3 × 8–12, edit after.", sub);
+    }
+  }));
+  items.push({label:"Custom exercise…", custom:true, fn:()=>{
+    const nm=prompt("Exercise name:"); if(!nm||!nm.trim())return;
+    state.plan.days[curDay].ex.push(ex(uid(), nm.trim(), 3, 8, 12));
+    scheduleSave(); renderLog();
+  }});
+  openSheet("Add exercise", "Choose a movement family first.", items);
+}
+
+/* Seed: logged history carried over from the v1 app export (Wk 1, Mon chest + one weigh-in).
+   Merged on boot only where no local data exists — never overwrites anything you've logged. */
+const SEED = {
+  log: { "1": {
+    "bench":    [{w:"120",r:"4"},{w:"110",r:"5"},{w:"110",r:"5"},{w:"110",r:"5"}],
+    "smith":    [{w:"40",r:"8"},{w:"30",r:"10"},{w:"30",r:"8"}],
+    "pecdeck":  [{w:"65",r:"8"},{w:"59.5",r:"11"},{w:"59.5",r:"10"}],
+    "latraise": [{w:"12.5",r:"15"},{w:"12.5",r:"12"},{w:"12.5",r:"12"}],
+    "skull":    [{w:"10",r:"12"},{w:"10",r:"12"},{w:"10",r:"12"}],
+    "pushdown": [{w:"50",r:"8"},{w:"45",r:"10"},{w:"39",r:"10"}],
+  }},
+  weights: { "1": ["","","56.15","","","",""] },
+};
+function mergeSeed(){
+  for(const wk in SEED.log){
+    state.log[wk] = state.log[wk] || {};
+    for(const exId in SEED.log[wk]){
+      const local = state.log[wk][exId];
+      const hasLocal = local && local.some(s=>s.w!=="" && s.r!=="");
+      if(!hasLocal) state.log[wk][exId] = JSON.parse(JSON.stringify(SEED.log[wk][exId]));
+    }
+  }
+  for(const wk in SEED.weights){
+    state.weights[wk] = state.weights[wk] || ["","","","","","",""];
+    SEED.weights[wk].forEach((v,i)=>{
+      if(v!=="" && (state.weights[wk][i]===""||state.weights[wk][i]===undefined)) state.weights[wk][i]=v;
     });
   }
-  return best>0 ? {e1rm:best, week:bw} : null;
 }
+
+/* Backfill fields on plans saved by older app versions (e.g. missing slot).
+   Match by id against the default plan first, then by name against the bank. */
+function hydratePlan(){
+  const defaults = {};
+  DEFAULT_PLAN.days.forEach(d=>d.ex.forEach(e=>{ defaults[e.id]=e; }));
+  const nameToSlot = {};
+  Object.keys(BANK).forEach(k=>BANK[k].list.forEach(n=>{ nameToSlot[n.replace(" ★","")]=k; }));
+  state.plan.days.forEach(d=>d.ex.forEach(e=>{
+    if(e.slot===undefined || e.slot===null){
+      if(defaults[e.id]) e.slot = defaults[e.id].slot;
+      else if(nameToSlot[e.name]) e.slot = nameToSlot[e.name];
+      else e.slot = "other";
+    }
+    if(e.inc===undefined) e.inc = defaults[e.id] ? defaults[e.id].inc : 2.5;
+    if(e.track===undefined) e.track = defaults[e.id] ? defaults[e.id].track : false;
+    if(e.top===undefined) e.top = false;
+    if(e.legs===undefined) e.legs = false;
+  }));
+}
+
+/* v1 migration: old shape log[wk][dayIdx][exIdx] → exIds via default plan positions */
+async function migrateV1(){
+  const old = await store.get("pb:block1");
+  if(!old || !old.log) return;
+  for(const wk in old.log){
+    state.log[wk] = state.log[wk] || {};
+    for(const d in old.log[wk]){
+      const day = DEFAULT_PLAN.days[+d]; if(!day) continue;
+      for(const e in old.log[wk][d]){
+        const exdef = day.ex[+e]; if(!exdef) continue;
+        state.log[wk][exdef.id] = old.log[wk][d][e];
+      }
+    }
+  }
+  if(old.weights) state.weights = old.weights;
+  scheduleSave();
+}
+
+/* ------------ history helpers ------------ */
+function getSets(wk,exId,n){
+  state.log[wk] = state.log[wk] || {};
+  let s = state.log[wk][exId];
+  if(!s){ s = Array.from({length:n},()=>({w:"",r:"",rpe:""})); state.log[wk][exId]=s; }
+  while(s.length<n) s.push({w:"",r:"",rpe:""});
+  return s;
+}
+function lastLogged(exId, beforeWeek){
+  for(let wk=beforeWeek-1; wk>=1; wk--){
+    const s = state.log[wk] && state.log[wk][exId];
+    if(s && s.some(x=>x.w!=="" && x.r!=="")) return {week:wk, sets:s};
+  }
+  return null;
+}
+function dayHasData(wk, day){
+  return day.ex.some(e=>{
+    const s = state.log[wk] && state.log[wk][e.id];
+    return s && s.some(x=>x.w!=="" && x.r!=="");
+  });
+}
+
+/* ------------ suggestion engine ------------ */
+function suggestFor(exdef, wk){
+  const last = lastLogged(exdef.id, wk);
+  if(!last) return null;
+  const L = last.sets.filter(s=>s.w!=="" && s.r!=="");
+  if(!L.length) return null;
+
+  if(exdef.top){
+    const ts = last.sets[0].w!=="" ? last.sets[0] : L[0];
+    const w = parseFloat(ts.w), r = parseFloat(ts.r), rpe = parseFloat(ts.rpe);
+    if(!(w>0)) return null;
+    if(wk===5) return {w:round25(w*0.65), why:`deload — ~65% of wk ${last.week} top set (${w}kg)`};
+    if(!isNaN(rpe)){
+      if(rpe<=8) return {w:round25(w+exdef.inc), why:`wk ${last.week}: ${w}×${r} @ RPE ${rpe} → add ${exdef.inc}kg`};
+      return {w:w, why:`wk ${last.week}: ${w}×${r} @ RPE ${rpe} → repeat, own it first`};
+    }
+    return {w:w, why:`wk ${last.week}: ${w}×${r} (no RPE logged) → repeat or judge by feel`};
+  }
+  /* accessory double progression */
+  const maxed = L.every(s=>parseFloat(s.r)>=exdef.repMax);
+  const topW = Math.max(...L.map(s=>parseFloat(s.w)||0));
+  if(wk===5) return {w:round25(topW*0.7), why:`deload — light and easy`};
+  if(maxed) return {w:round25(topW+2.5), why:`hit ${exdef.repMax}s across the board wk ${last.week} → add weight, back to ${exdef.repMin}s`};
+  return {w:topW, why:`wk ${last.week}: repeat ${topW}kg, beat the reps (target ${exdef.repMax})`};
+}
+
+/* ------------ log view ------------ */
 function renderWeekstrip(){
-  const el = document.getElementById("weekstrip");
-  el.innerHTML = "";
+  const el = document.getElementById("weekstrip"); el.innerHTML="";
   for(let w=1; w<=N_WEEKS; w++){
     const b = document.createElement("button");
-    b.className = "wkbtn" + (w===curWeek ? " active":"");
+    b.className = "wkbtn"+(w===curWeek?" active":"");
     b.innerHTML = `<small>${w===5?"DELOAD":w===8?"TEST":"WEEK"}</small>${w}`;
     b.onclick = ()=>{ curWeek=w; renderLog(); };
     el.appendChild(b);
   }
 }
 function renderDayTabs(){
-  const el = document.getElementById("daytabs");
-  el.innerHTML = "";
-  PLAN.days.forEach((day,i)=>{
+  const el = document.getElementById("daytabs"); el.innerHTML="";
+  state.plan.days.forEach((day,i)=>{
     const b = document.createElement("button");
-    b.className = "daybtn" + (i===curDay?" active":"") + (dayHasData(curWeek,i)?" done":"");
+    b.className = "daybtn"+(i===curDay?" active":"")+(dayHasData(curWeek,day)?" done":"");
     b.innerHTML = `${day.key}<small>D${i+1}</small>`;
     b.onclick = ()=>{ curDay=i; renderLog(); };
     el.appendChild(b);
   });
 }
+function renderDayEditBar(){
+  const bar = document.getElementById("dayeditbar");
+  bar.classList.toggle("hidden", !editMode);
+  if(!editMode) return;
+  const day = state.plan.days[curDay];
+  bar.innerHTML = "";
+  const mk = (label,fn,cls="")=>{ const b=document.createElement("button"); b.className="ebtn "+cls; b.textContent=label; b.onclick=fn; bar.appendChild(b); };
+  mk("◀ Move day", ()=>{ if(curDay>0){ const d=state.plan.days; [d[curDay-1],d[curDay]]=[d[curDay],d[curDay-1]]; curDay--; scheduleSave(); renderLog(); } });
+  mk("Move day ▶", ()=>{ const d=state.plan.days; if(curDay<d.length-1){ [d[curDay+1],d[curDay]]=[d[curDay],d[curDay+1]]; curDay++; scheduleSave(); renderLog(); } });
+  mk("Rename day", ()=>{
+    const nm = prompt("Day name:", day.name); if(nm===null) return;
+    const ky = prompt("Day label (MON/WED/…):", day.key); if(ky===null) return;
+    day.name = nm.trim()||day.name; day.key = (ky.trim()||day.key).toUpperCase().slice(0,4);
+    scheduleSave(); renderLog();
+  }, "gold");
+}
 function renderLog(){
-  renderWeekstrip(); renderDayTabs();
+  renderWeekstrip(); renderDayTabs(); renderDayEditBar();
+  document.getElementById("btnAddEx").classList.toggle("hidden", !editMode);
   const note = document.getElementById("weeknote");
-  note.textContent = PLAN.notes[curWeek];
-  note.className = "note" + (curWeek===5?" deload":"");
-  const day = PLAN.days[curDay];
-  const list = document.getElementById("exlist");
-  list.innerHTML = "";
-  day.ex.forEach((ex,e)=>{
-    const [name,reps,nsets,top,legs] = ex;
-    const sets = getSets(curWeek,curDay,e,nsets);
+  note.textContent = NOTES[curWeek];
+  note.className = "note"+(curWeek===5?" deload":"");
+  const day = state.plan.days[curDay];
+  const list = document.getElementById("exlist"); list.innerHTML="";
+
+  day.ex.forEach((exdef, eIdx)=>{
+    const sets = getSets(curWeek, exdef.id, exdef.sets);
+    const last = lastLogged(exdef.id, curWeek);
+    const sug = suggestFor(exdef, curWeek);
     const card = document.createElement("div");
-    card.className = "ex" + (top?" top":"");
-    let badges = "";
-    if(top) badges += `<span class="badge top">Top set</span>`;
-    else if(legs) badges += `<span class="badge legs">Legs</span>`;
-    let head = `<div class="exhead"><div><div class="exname">${name}</div><div class="exmeta">${reps}${top?" · S1 = top set, rest = back-offs":""}</div></div><div>${badges}</div></div>`;
-    let rows = `<div class="sets">`;
-    sets.forEach((s,i)=>{
-      const isTS = top && i===0;
+    card.className = "ex"+(exdef.top?" top":"");
+
+    let badges = exdef.top ? `<span class="badge top">Top set</span>` : (exdef.legs ? `<span class="badge legs">Legs</span>` : "");
+    const repTxt = exdef.repMin===exdef.repMax ? `${exdef.sets} × ${exdef.repMin}` : `${exdef.sets} × ${exdef.repMin}–${exdef.repMax}`;
+    let html = `<div class="exhead"><div><div class="exname">${exdef.name}</div><div class="exmeta">${repTxt}${exdef.top?" · S1 = top set + RPE, rest = back-offs":""}</div></div><div>${badges}</div></div>`;
+
+    if(sug) html += `<div class="suggest">→ Suggest <b>${sug.w}kg</b> · ${sug.why}</div>`;
+
+    html += `<div class="sets">`;
+    for(let i=0;i<exdef.sets;i++){
+      const s = sets[i];
+      const isTS = exdef.top && i===0;
+      const ghost = last && last.sets[i] ? last.sets[i] : null;
+      const gw = ghost && ghost.w!=="" ? ghost.w : (sug && i===0 ? sug.w : "kg");
+      const gr = ghost && ghost.r!=="" ? ghost.r : "reps";
       const e1 = epley(parseFloat(s.w),parseFloat(s.r));
-      rows += `<div class="setrow">
+      html += `<div class="setrow${isTS?"":" notop"}">
         <div class="setlabel${isTS?" ts":""}">${isTS?"TOP":"S"+(i+1)}</div>
-        <input type="number" inputmode="decimal" step="0.5" placeholder="kg" value="${s.w}" data-e="${e}" data-s="${i}" data-f="w">
-        <input type="number" inputmode="numeric" placeholder="reps" value="${s.r}" data-e="${e}" data-s="${i}" data-f="r">
-        <div class="e1rm" id="e1-${e}-${i}">${e1?fmt(e1):""}</div>
+        <input type="number" inputmode="decimal" step="0.5" placeholder="${gw}" value="${s.w}" data-e="${exdef.id}" data-s="${i}" data-f="w">
+        <input type="number" inputmode="numeric" placeholder="${gr}" value="${s.r}" data-e="${exdef.id}" data-s="${i}" data-f="r">
+        ${isTS?`<input type="number" inputmode="decimal" step="0.5" class="rpe" placeholder="RPE" value="${s.rpe||""}" data-e="${exdef.id}" data-s="${i}" data-f="rpe">`:""}
+        <div class="e1rm" id="e1-${exdef.id}-${i}">${e1?fmt(e1):""}</div>
       </div>`;
-    });
-    rows += `</div>`;
-    const prev = bestPrev(name,curWeek);
-    const best = prev ? `<div class="exbest">Best so far: <b>${fmt(prev.e1rm)} e1RM</b> (wk ${prev.week}) — beat it.</div>` : "";
-    card.innerHTML = head + rows + best;
+    }
+    html += `</div>`;
+
+    if(editMode){
+      html += `<div class="editfields">
+        <div class="efrow"><label>Name</label><input type="text" value="${exdef.name.replace(/"/g,'&quot;')}" data-ef="name" data-e="${exdef.id}"></div>
+        <div class="efrow"><label>Sets · reps</label><div class="mini">
+          <input type="number" value="${exdef.sets}" min="1" max="6" data-ef="sets" data-e="${exdef.id}">
+          <span>×</span>
+          <input type="number" value="${exdef.repMin}" min="1" data-ef="repMin" data-e="${exdef.id}">
+          <span>–</span>
+          <input type="number" value="${exdef.repMax}" min="1" data-ef="repMax" data-e="${exdef.id}">
+        </div></div>
+        <div class="togglerow">
+          <label><input type="checkbox" ${exdef.top?"checked":""} data-ef="top" data-e="${exdef.id}"> Top-set lift</label>
+          <label><input type="checkbox" ${exdef.legs?"checked":""} data-ef="legs" data-e="${exdef.id}"> Legs</label>
+          <label><input type="checkbox" ${exdef.track?"checked":""} data-ef="track" data-e="${exdef.id}"> Track</label>
+          <label>+<input type="number" step="2.5" value="${exdef.inc}" style="width:52px;background:var(--surface2);border:1px solid var(--line);border-radius:6px;color:var(--text);padding:4px;text-align:center" data-ef="inc" data-e="${exdef.id}">kg</label>
+        </div>
+      </div>
+      <div class="editbar">
+        <button class="ebtn" data-act="up" data-e="${exdef.id}">▲ Up</button>
+        <button class="ebtn" data-act="down" data-e="${exdef.id}">▼ Down</button>
+        <button class="ebtn" data-act="move" data-e="${exdef.id}">Move to day…</button>
+        <button class="ebtn gold" data-act="swap" data-e="${exdef.id}">Swap exercise</button>
+        <button class="ebtn danger" data-act="del" data-e="${exdef.id}">Delete</button>
+      </div>`;
+    }
+    card.innerHTML = html;
     list.appendChild(card);
   });
-  list.querySelectorAll("input").forEach(inp=>{
+
+  /* set logging inputs */
+  list.querySelectorAll("input[data-f]").forEach(inp=>{
     inp.addEventListener("input", ()=>{
-      const e=+inp.dataset.e, s=+inp.dataset.s, f=inp.dataset.f;
-      const sets = getSets(curWeek,curDay,e,PLAN.days[curDay].ex[e][2]);
+      const id=inp.dataset.e, s=+inp.dataset.s, f=inp.dataset.f;
+      const exdef = day.ex.find(x=>x.id===id);
+      const sets = getSets(curWeek,id,exdef.sets);
       sets[s][f] = inp.value;
       const v = epley(parseFloat(sets[s].w),parseFloat(sets[s].r));
-      document.getElementById(`e1-${e}-${s}`).textContent = v?fmt(v):"";
-      scheduleSave();
-      renderDayTabs();
+      const el = document.getElementById(`e1-${id}-${s}`);
+      if(el) el.textContent = v?fmt(v):"";
+      scheduleSave(); renderDayTabs();
     });
   });
-}
 
-/* ---------------- progress view ---------------- */
-function weekBest(exName,wk){
-  let best=0;
-  PLAN.days.forEach((day,d)=>{
-    day.ex.forEach((ex,e)=>{
-      if(ex[0]!==exName) return;
-      const sets = state.log[wk] && state.log[wk][d] && state.log[wk][d][e];
-      if(!sets) return;
-      sets.forEach(s=>{ const v=epley(parseFloat(s.w),parseFloat(s.r)); if(v>best) best=v; });
+  if(editMode){
+    list.querySelectorAll("[data-ef]").forEach(inp=>{
+      inp.addEventListener("change", ()=>{
+        const exdef = day.ex.find(x=>x.id===inp.dataset.e);
+        const f = inp.dataset.ef;
+        if(f==="top"||f==="legs"||f==="track") exdef[f]=inp.checked;
+        else if(f==="name") exdef.name = inp.value.trim()||exdef.name;
+        else exdef[f] = Math.max(1, parseFloat(inp.value)||exdef[f]);
+        if(exdef.repMax<exdef.repMin) exdef.repMax=exdef.repMin;
+        scheduleSave();
+        if(f!=="name") renderLog();
+      });
     });
-  });
+    list.querySelectorAll("[data-act]").forEach(btn=>{
+      btn.onclick = ()=>{
+        const id=btn.dataset.e, i=day.ex.findIndex(x=>x.id===id), exdef=day.ex[i];
+        const act=btn.dataset.act;
+        if(act==="up" && i>0){ [day.ex[i-1],day.ex[i]]=[day.ex[i],day.ex[i-1]]; }
+        else if(act==="down" && i<day.ex.length-1){ [day.ex[i+1],day.ex[i]]=[day.ex[i],day.ex[i+1]]; }
+        else if(act==="del"){ if(!confirm(`Delete ${exdef.name}? Its logged history stays in backups but won't display.`)) return; day.ex.splice(i,1); }
+        else if(act==="swap"){ swapSheet(exdef); return; }
+        else if(act==="move"){
+          const opts = state.plan.days.map((d,di)=>`${di+1}: ${d.key} — ${d.name}`).join("\n");
+          const pick = prompt("Move to which day?\n"+opts, String(curDay+1));
+          if(pick===null) return;
+          const di = parseInt(pick)-1;
+          if(isNaN(di)||di<0||di>=state.plan.days.length||di===curDay) return;
+          day.ex.splice(i,1); state.plan.days[di].ex.push(exdef);
+        }
+        scheduleSave(); renderLog();
+      };
+    });
+  }
+}
+document.getElementById("btnAddEx").onclick = addExSheet;
+document.getElementById("btnEdit").onclick = ()=>{
+  editMode = !editMode;
+  const b = document.getElementById("btnEdit");
+  b.classList.toggle("on", editMode);
+  b.textContent = editMode ? "Done" : "Edit plan";
+  renderLog();
+};
+
+/* ------------ progress ------------ */
+function weekBest(exId,wk){
+  const s = state.log[wk] && state.log[wk][exId]; if(!s) return 0;
+  let best=0; s.forEach(x=>{ const v=epley(parseFloat(x.w),parseFloat(x.r)); if(v>best)best=v; });
   return best;
 }
 function renderProgress(){
-  const list = document.getElementById("proglist");
-  list.innerHTML = "";
-  PLAN.mains.forEach(name=>{
-    const vals = []; let max=0;
-    for(let w=1;w<=N_WEEKS;w++){ const v=weekBest(name,w); vals.push(v); if(v>max)max=v; }
+  const list = document.getElementById("proglist"); list.innerHTML="";
+  const tracked = [];
+  state.plan.days.forEach(d=>d.ex.forEach(e=>{ if(e.track||e.top) tracked.push(e); }));
+  if(!tracked.length){ list.innerHTML = `<div class="note">No tracked lifts — tick "Track" on any exercise in Edit mode.</div>`; return; }
+  tracked.forEach(exdef=>{
+    const vals=[]; let max=0;
+    for(let w=1;w<=N_WEEKS;w++){ const v=weekBest(exdef.id,w); vals.push(v); if(v>max)max=v; }
     const first = vals.find(v=>v>0)||0;
     const lastIdx = vals.map((v,i)=>v>0?i:-1).filter(i=>i>=0).pop();
-    const last = lastIdx>=0 ? vals[lastIdx] : 0;
-    const delta = (first && last && lastIdx>vals.indexOf(first)) ? last-first : 0;
+    const last = lastIdx>=0?vals[lastIdx]:0;
+    const delta = (first&&last&&lastIdx>vals.indexOf(first))?last-first:0;
     const card = document.createElement("div");
-    card.className = "plift";
-    let bars = `<div class="bars">`;
+    card.className="plift";
+    let bars=`<div class="bars">`;
     vals.forEach((v,i)=>{
-      const h = max ? Math.max(4, v/max*100) : 4;
-      const cls = i===4 ? "dl" : (v===max && v>0 ? "hi":"");
-      bars += `<div class="barwrap"><div class="bar ${cls}" style="height:${v?h:4}%"></div><div class="barnum">${v?Math.round(v):"·"}</div></div>`;
+      const h=max?Math.max(4,v/max*100):4;
+      const cls=i===4?"dl":(v===max&&v>0?"hi":"");
+      bars+=`<div class="barwrap"><div class="bar ${cls}" style="height:${v?h:4}%"></div><div class="barnum">${v?Math.round(v):"·"}</div></div>`;
     });
-    bars += `</div>`;
-    card.innerHTML = `<h3>${name}</h3><div class="pdelta">${
-      delta>0 ? `Est 1RM <b>+${fmt(delta)}kg</b> since first logged week`
-      : first ? `Est 1RM ${fmt(first)}kg — log more weeks to see the trend`
-      : `Nothing logged yet — the bars fill as you train`
+    bars+=`</div>`;
+    card.innerHTML=`<h3>${exdef.name}</h3><div class="pdelta">${
+      delta>0?`Est 1RM <b>+${fmt(delta)}kg</b> since first logged week`
+      :first?`Est 1RM ${fmt(first)}kg — log more weeks to see the trend`
+      :`Nothing logged yet`
     }</div>${bars}`;
     list.appendChild(card);
   });
 }
 
-/* ---------------- weigh-in view ---------------- */
+/* ------------ weigh-in ------------ */
 function renderWeight(){
-  const list = document.getElementById("weighlist");
-  list.innerHTML = "";
+  const list = document.getElementById("weighlist"); list.innerHTML="";
   for(let w=1; w<=N_DIET_WEEKS; w++){
     state.weights[w] = state.weights[w] || ["","","","","","",""];
     const vals = state.weights[w];
     const nums = vals.map(parseFloat).filter(v=>!isNaN(v));
     const avg = nums.length ? nums.reduce((a,b)=>a+b,0)/nums.length : null;
-    let prevAvg = null;
-    if(w>1){
-      const pv = (state.weights[w-1]||[]).map(parseFloat).filter(v=>!isNaN(v));
-      if(pv.length) prevAvg = pv.reduce((a,b)=>a+b,0)/pv.length;
-    }
-    const delta = (avg!==null && prevAvg!==null) ? avg-prevAvg : null;
-    let action="", cls="";
+    let prevAvg=null;
+    if(w>1){ const pv=(state.weights[w-1]||[]).map(parseFloat).filter(v=>!isNaN(v)); if(pv.length) prevAvg=pv.reduce((a,b)=>a+b,0)/pv.length; }
+    const delta = (avg!==null&&prevAvg!==null)?avg-prevAvg:null;
+    let action="",cls="";
     if(delta!==null){
-      if(delta<0.15){ action="Flat — add ~200 kcal if this is the 2nd–3rd flat week"; cls="add"; }
-      else if(delta>0.55){ action="Gaining fast — pull back ~150 kcal"; cls="cut"; }
-      else { action="On track — change nothing"; cls="ok"; }
+      if(delta<0.15){action="Flat — add ~200 kcal if this is the 2nd–3rd flat week";cls="add";}
+      else if(delta>0.55){action="Gaining fast — pull back ~150 kcal";cls="cut";}
+      else{action="On track — change nothing";cls="ok";}
     }
-    const row = document.createElement("div");
-    row.className = "wrow";
-    row.innerHTML = `<div class="whead"><span>Wk ${w}${w===5?" · deload":""}</span><span class="wavg">${avg!==null?fmt(avg)+" kg":""}${delta!==null?` <span style="color:var(--faint)">(${delta>=0?"+":""}${fmt(delta)})</span>`:""}</span></div>
+    const row=document.createElement("div");
+    row.className="wrow";
+    row.innerHTML=`<div class="whead"><span>Wk ${w}${w===5?" · deload":""}</span><span class="wavg">${avg!==null?fmt(avg)+" kg":""}${delta!==null?` <span style="color:var(--faint)">(${delta>=0?"+":""}${fmt(delta)})</span>`:""}</span></div>
       <div class="wdays">${vals.map((v,i)=>`<input type="number" inputmode="decimal" step="0.1" value="${v}" data-w="${w}" data-d="${i}" placeholder="·">`).join("")}</div>
       ${action?`<div class="waction ${cls}">${action}</div>`:""}`;
     list.appendChild(row);
   }
   list.querySelectorAll("input").forEach(inp=>{
-    inp.addEventListener("change", ()=>{
-      state.weights[inp.dataset.w][+inp.dataset.d] = inp.value;
-      scheduleSave();
-      renderWeight();
+    inp.addEventListener("change",()=>{
+      state.weights[inp.dataset.w][+inp.dataset.d]=inp.value;
+      scheduleSave(); renderWeight();
     });
   });
 }
 
-/* ---------------- data view ---------------- */
+/* ------------ data ------------ */
 function toast(msg){
-  const t = document.getElementById("toast");
-  t.textContent = msg; t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), 1800);
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),1800);
 }
-document.getElementById("btnExport").onclick = ()=>{
-  const blob = new Blob([JSON.stringify(state,null,1)],{type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "block-one-backup.json";
-  a.click();
+document.getElementById("btnExport").onclick=()=>{
+  const blob=new Blob([JSON.stringify(state,null,1)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="block-one-backup.json"; a.click();
   toast("Backup downloaded");
 };
-document.getElementById("btnImport").onclick = ()=>document.getElementById("fileImport").click();
-document.getElementById("fileImport").addEventListener("change", e=>{
-  const f = e.target.files[0]; if(!f) return;
-  const r = new FileReader();
-  r.onload = ()=>{
+document.getElementById("btnImport").onclick=()=>document.getElementById("fileImport").click();
+document.getElementById("fileImport").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
     try{
-      const data = JSON.parse(r.result);
-      if(!data.log || !data.weights) throw 0;
-      state = data; scheduleSave(); renderLog(); toast("Backup restored");
+      const data=JSON.parse(r.result);
+      if(!data.log||!data.weights) throw 0;
+      if(!data.plan) data.plan=JSON.parse(JSON.stringify(DEFAULT_PLAN));
+      state=data; state.ver=2; hydratePlan(); scheduleSave(); renderLog(); toast("Backup restored");
     }catch(err){ toast("That file isn't a valid backup"); }
   };
   r.readAsText(f);
 });
-document.getElementById("btnReset").onclick = ()=>{
-  if(!confirm("Erase all logged sets and weigh-ins? The plan itself stays.")) return;
-  state = { log:{}, weights:{} };
-  store.del("pb:block1");
-  renderLog(); toast("Data erased");
+document.getElementById("btnResetPlan").onclick=()=>{
+  if(!confirm("Restore the default Block One plan? Your logged sets and weigh-ins are kept; plan edits are discarded."))return;
+  state.plan=JSON.parse(JSON.stringify(DEFAULT_PLAN));
+  scheduleSave(); renderLog(); toast("Default plan restored");
+};
+document.getElementById("btnReset").onclick=()=>{
+  if(!confirm("Erase ALL logged sets and weigh-ins? Plan edits are kept."))return;
+  state.log={}; state.weights={};
+  scheduleSave(); renderLog(); toast("Logs erased");
 };
 
-/* ---------------- nav ---------------- */
+/* ------------ nav ------------ */
 document.querySelectorAll("nav button").forEach(b=>{
-  b.onclick = ()=>{
+  b.onclick=()=>{
     document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
     b.classList.add("active");
     ["log","progress","weight","data"].forEach(v=>{
-      document.getElementById("view-"+v).classList.toggle("hidden", v!==b.dataset.view);
+      document.getElementById("view-"+v).classList.toggle("hidden",v!==b.dataset.view);
     });
-    if(b.dataset.view==="progress") renderProgress();
-    if(b.dataset.view==="weight") renderWeight();
+    if(b.dataset.view==="progress")renderProgress();
+    if(b.dataset.view==="weight")renderWeight();
   };
 });
 
-/* ---------------- boot ---------------- */
-(async ()=>{
-  const saved = await store.get("pb:block1");
-  if(saved && saved.log) state = saved;
+/* ------------ boot ------------ */
+(async()=>{
+  const saved=await store.get("pb:v2");
+  if(saved&&saved.plan){ state=saved; }
+  else{ await migrateV1(); }
+  hydratePlan(); mergeSeed(); scheduleSave();
   renderLog();
 })();
 </script>
